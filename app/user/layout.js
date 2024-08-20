@@ -198,14 +198,14 @@ export default async function AuthRootLayout({ children }) {
                 </li>
                 <li className="nav-item ps-md-3 pn-0 d-flex align-items-center">
                   <div className="dropdown custom-dropdown-profile">
-                    Hi, {session.user.name}
+                    Hi, {session?.user?.name}
                     <ButtonLogout>
                       <img
                         className="h-100 ms-md-1"
                         alt="avatar"
                         src={
-                          session.user.image != ""
-                            ? session.user.image
+                          session?.user?.image != ""
+                            ? session?.user?.image
                             : config.avatarPng
                         }
                         width="28"
