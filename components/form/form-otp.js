@@ -4,10 +4,20 @@ import { useFormState } from "react-dom";
 import { useFormStatus } from "react-dom";
 import { redirect } from "next/navigation";
 import { processOtp } from "@/actions/auth-actions";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function FormOtp({ session, config }) {
   const { pending } = useFormStatus();
+
+  const [countdown, setCountdown] = useState(180);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const [formState, formAction] = useFormState(processOtp, {
     status: false,
@@ -103,8 +113,11 @@ export default function FormOtp({ session, config }) {
         </div>
         <div className="card-body text-space-grotesk">
           <span className="text-dark text-sm">
-            Input OTP Code
-            <strong>2:58</strong>
+            Input OTP Code &nbsp;
+            <strong>
+              {Math.floor(countdown / 60)}:
+              {(countdown % 60).toString().padStart(2, "0")}
+            </strong>
           </span>
           <span className="text-primary text-sm font-weight-bold float-end">
             Resend OTP
