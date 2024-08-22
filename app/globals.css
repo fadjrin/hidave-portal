@@ -50,6 +50,7 @@
   --bs-body-color-rgb: 103, 116, 142;
   --bs-body-bg-rgb: 255, 255, 255;
   --bs-font-sans-serif: "Inter", sans-serif;
+  --bs-font-space-grotesk: "Space Grotesk", sans-serif;
   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
   --bs-body-font-family: var(--bs-font-sans-serif);
@@ -68,7 +69,7 @@
   --bs-border-radius-xl: 1rem;
   --bs-border-radius-2xl: 1.5rem;
   --bs-border-radius-pill: 50rem;
-  --bs-heading-color: #344767;
+  --bs-heading-color: #282828;
   --bs-link-color: #5e72e4;
   --bs-link-hover-color: #233dd2;
   --bs-code-color: #d63384;
@@ -2891,7 +2892,7 @@ textarea.form-control-lg {
   background-position: right 0.75rem center;
   background-size: 16px 12px;
   border: 1px solid #d2d6da;
-  border-radius: 0.5rem;
+  border-radius: 5.5rem;
   transition: box-shadow 0.15s ease, border-color 0.15s ease;
   appearance: none;
 }
@@ -3009,7 +3010,7 @@ textarea.form-control-lg {
 }
 
 .form-check-input:checked[type="checkbox"] {
-  background-image: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  background-color: #396CF6;
 }
 
 .form-check-input:checked[type="radio"] {
@@ -3304,7 +3305,8 @@ textarea.form-control-lg {
   white-space: nowrap;
   background-color: #fff;
   border: 1px solid #d2d6da;
-  border-radius: 0.5rem;
+  border-top-left-radius: 5.5rem;
+  border-bottom-left-radius: 5.5rem;
 }
 
 .input-group-lg>.form-control,
@@ -3333,7 +3335,9 @@ textarea.form-control-lg {
 .input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
 .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n + 3) {
   border-top-right-radius: 0;
+  border-top-left-radius: 5.5rem;
   border-bottom-right-radius: 0;
+  border-bottom-left-radius: 5.5rem;
 }
 
 .input-group.has-validation> :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu),
@@ -3379,9 +3383,9 @@ textarea.form-control-lg {
 
 .was-validated .form-control:valid,
 .form-control.is-valid {
-  border-color: #66d432;
+/*  border-color: #66d432;*/
   padding-right: unset;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3e%3cpath fill='%2366d432' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+/*  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3e%3cpath fill='%2366d432' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");*/
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1rem 1rem;
@@ -3389,8 +3393,8 @@ textarea.form-control-lg {
 
 .was-validated .form-control:valid:focus,
 .form-control.is-valid:focus {
-  border-color: #66d432;
-  box-shadow: 0 0 0 2px rgba(102, 212, 50, 0.25);
+/*  border-color: #66d432;*/
+/*  box-shadow: 0 0 0 2px rgba(102, 212, 50, 0.25);*/
 }
 
 .was-validated textarea.form-control:valid,
@@ -3416,8 +3420,8 @@ textarea.form-control.is-valid {
 
 .was-validated .form-select:valid:focus,
 .form-select.is-valid:focus {
-  border-color: #66d432;
-  box-shadow: 0 0 0 2px rgba(102, 212, 50, 0.25);
+/*  border-color: #66d432;*/
+/*  box-shadow: 0 0 0 2px rgba(102, 212, 50, 0.25);*/
 }
 
 .was-validated .form-control-color:valid,
@@ -3427,22 +3431,22 @@ textarea.form-control.is-valid {
 
 .was-validated .form-check-input:valid,
 .form-check-input.is-valid {
-  border-color: #66d432;
+/*  border-color: #66d432;*/
 }
 
 .was-validated .form-check-input:valid:checked,
 .form-check-input.is-valid:checked {
-  background-color: #66d432;
+/*  background-color: #66d432;*/
 }
 
 .was-validated .form-check-input:valid:focus,
 .form-check-input.is-valid:focus {
-  box-shadow: 0 0 0 2px rgba(102, 212, 50, 0.25);
+/*  box-shadow: 0 0 0 2px rgba(102, 212, 50, 0.25);*/
 }
 
 .was-validated .form-check-input:valid~.form-check-label,
 .form-check-input.is-valid~.form-check-label {
-  color: #66d432;
+/*  color: #66d432;*/
 }
 
 .form-check-inline .form-check-input~.valid-feedback {
@@ -3813,17 +3817,17 @@ fieldset:disabled .btn {
 }
 
 .btn-outline-primary {
-  --bs-btn-color: #5e72e4;
-  --bs-btn-border-color: #5e72e4;
-  --bs-btn-hover-color: #000;
-  --bs-btn-hover-bg: #5e72e4;
-  --bs-btn-hover-border-color: #5e72e4;
+  --bs-btn-color: #396CF6;
+  --bs-btn-border-color: #396CF6;
+  --bs-btn-hover-color: #396CF6;
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-hover-border-color: #396CF6;
   --bs-btn-focus-shadow-rgb: rgba(57, 108, 246, 1);
-  --bs-btn-active-color: #000;
-  --bs-btn-active-bg: #5e72e4;
-  --bs-btn-active-border-color: #5e72e4;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #396CF6;
+  --bs-btn-active-border-color: #396CF6;
   --bs-btn-active-shadow: none;
-  --bs-btn-disabled-color: #5e72e4;
+  --bs-btn-disabled-color: #396CF6;
   --bs-btn-disabled-bg: transparent;
   --bs-gradient: none;
 }
@@ -5622,7 +5626,7 @@ fieldset:disabled .btn {
   --bs-badge-padding-x: 0.9em;
   --bs-badge-padding-y: 0.55em;
   --bs-badge-font-size: 0.75em;
-  --bs-badge-font-weight: 700;
+  --bs-badge-font-weight: 400;
   --bs-badge-color: #fff;
   --bs-badge-border-radius: 0.45rem;
   display: inline-block;
@@ -10524,7 +10528,7 @@ fieldset:disabled .btn {
 }
 
 .text-warning {
-  color: #fb6340 !important;
+  color: #EAB308 !important;
 }
 
 .text-danger {
@@ -10537,6 +10541,11 @@ fieldset:disabled .btn {
 
 .text-dark {
   color: #344767 !important;
+}
+
+.text-gray {
+  font-family: var(--bs-font-space-grotesk) !important;
+  color: #9E9E9E !important;
 }
 
 .text-white {
@@ -10632,7 +10641,7 @@ fieldset:disabled .btn {
 }
 
 .bg-gray-300 {
-  background-color: #dee2e6 !important;
+  background-color: #ebf0fe !important;
 }
 
 .bg-gray-400 {
@@ -20080,23 +20089,6 @@ fieldset:disabled .btn {
   }
 }
 
-/*!
-
-=========================================================
-* Argon Dashboard 2 - v2.0.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (site.license)
-
-* Coded by www.creative-tim.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 .alert-primary {
   background-image: linear-gradient(310deg, #5e72e4 0%, #673bde 100%);
 }
@@ -20272,6 +20264,26 @@ fieldset:disabled .btn {
   background: #fff;
 }
 
+.badge.outline-danger {
+  border: 1px solid #EF4444;
+}
+
+.badge.outline-primary {
+  border: 1px solid #3B82F6;
+}
+
+.badge.outline-success {
+  border: 1px solid #22C55E;
+}
+
+.badge.outline-warning {
+  border: 1px solid #EAB308;
+}
+
+.badge.outline-dark {
+  border: 1px solid #6B7280;
+}
+
 .badge {
   text-transform: uppercase;
 }
@@ -20420,7 +20432,7 @@ fieldset:disabled .btn {
   background-color: transparent;
   opacity: .75;
   box-shadow: none;
-  color: #5e72e4;
+  color: #396CF6;
 }
 
 .btn-secondary:hover,
@@ -21113,7 +21125,7 @@ fieldset:disabled .btn {
     margin-top: 40px !important;
   }
 
-  .dropdown .dropdown-menu:before {
+  /*.dropdown .dropdown-menu:before {
     font-family: "FontAwesome";
     content: "\f0d8";
     position: absolute;
@@ -21123,7 +21135,7 @@ fieldset:disabled .btn {
     font-size: 22px;
     color: #fff;
     transition: top 0.35s ease;
-  }
+  }*/
 
   .dropdown .dropdown-item .arrow {
     transform: rotate(-90deg);
@@ -21492,6 +21504,7 @@ fieldset:disabled .btn {
 
 .input-group .input-group-text {
   border-right: 0;
+  height: 100%;
 }
 
 .input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
@@ -21528,10 +21541,12 @@ fieldset:disabled .btn {
 }
 
 .form-check:not(.form-switch) .form-check-input[type="checkbox"]:after {
+  content: '';
   transition: opacity 0.25s ease-in-out;
-  font-family: "FontAwesome";
-  content: "\f00c";
-  width: 100%;
+  background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%208%208%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M6.564.75l-3.59%203.612-1.538-1.55L0%204.26%202.974%207.25%208%202.193z%22/%3E%3C/svg%3E');
+  width: 12px;
+  background-repeat: no-repeat;
+    margin: 4px;
   height: 100%;
   color: #fff;
   position: absolute;
@@ -21659,7 +21674,7 @@ label,
 }
 
 .bg-gradient-primary {
-  background-image: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  background: linear-gradient(90deg, #396CF6 0%, #2F5ACD 40.5%, #213F90 100%);
 }
 
 .bg-gradient-secondary {
@@ -22403,7 +22418,7 @@ hr.horizontal.gray-light {
 
 @media (min-width: 992px) {
   :not(.main-content) .navbar .dropdown .dropdown-menu {
-    top: 2.25rem !important;
+/*    top: 2.25rem !important;*/
   }
 
   :not(.main-content) .navbar .dropdown .dropdown-menu .dropdown .dropdown-menu {
@@ -22486,7 +22501,7 @@ hr.horizontal.gray-light {
   padding-left: 1rem;
   padding-right: 1rem;
   font-weight: 500;
-  color: #67748e;
+  color: #2b2a34;
 }
 
 .navbar-vertical .navbar-nav .nav-link>i {
@@ -22541,7 +22556,7 @@ hr.horizontal.gray-light {
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
   display: block;
   overflow: auto;
-  height: calc(100vh - 360px);
+  height: auto;
 }
 
 .navbar-vertical.navbar-expand-xs>[class*="container"] {
@@ -23312,7 +23327,7 @@ hr.horizontal.gray-light {
   opacity: 1;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 576px) {
   .g-sidenav-show.rtl .sidenav {
     transform: translateX(17.125rem);
   }
@@ -23335,7 +23350,8 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical.bg-white .navbar-nav>.nav-item .nav-link.active {
-  background-color: #f6f9fc;
+  background-color: #ebf0fe;
+  color: #396cf6; 
   box-shadow: none;
 }
 
@@ -24860,7 +24876,7 @@ h2,
 h3,
 .h3,
 .h3 {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 h4,
@@ -24935,6 +24951,10 @@ p {
 
 .text-sans-serif {
   font-family: "Inter", sans-serif !important;
+}
+
+.text-space-grotesk {
+  font-family: "Space Grotesk", sans-serif !important;
 }
 
 .text-monospace {
@@ -26932,3 +26952,5 @@ pre[class*="language-"] {
     overflow: auto !important;
   }
 }
+
+/*# sourceMappingURL=dashboard-free.css.map */

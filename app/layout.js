@@ -1,6 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./custom.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
+
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +20,15 @@ export default async function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
           rel="stylesheet"
         />
+        <link
+          href="https://fonts.googleapis.com/css?family=Space+Grotesk:300,400,600,700"
+          rel="stylesheet"
+        />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Toaster position="top-center" />
+        {children}
+      </body>
     </html>
   );
 }

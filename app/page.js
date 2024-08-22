@@ -1,22 +1,16 @@
-"use client";
-
 import Link from "next/link";
-import { useFormState } from "react-dom";
+import { redirect } from "next/navigation";
+
 import AuthTemplate from "@/components/auth-template";
 import config from "./config/config";
 import ButtonGoogle from "@/components/button/button-google";
-import { signinFirebase } from "@/actions/auth-actions";
-import { redirect } from "next/navigation";
+import FormLogin from "@/components/form/form-login";
+import { auth } from "@/lib/auth";
 
-export default function LoginPage() {
-  const [formState, formAction] = useFormState(signinFirebase, {
-    status: false,
-    errors: {},
-  });
+export default async function LoginPage() {
+  const session = await auth();
 
-  if (formState.status) {
-    redirect("/user/home");
-  }  
+  if (session) redirect("/user/home");
 
   return (
     <AuthTemplate config={config}>
@@ -27,52 +21,7 @@ export default function LoginPage() {
           <p className="mb-0">Please login to your account</p>
         </div>
 
-        <div className="card-body px-0">
-          {formState.status != true &&
-            Object.keys(formState.errors).length > 0 && (
-              <div className="alert alert-warning" role="alert">
-                <h4 className="alert-heading">Warning !</h4>
-                <ul>
-                  {Object.keys(formState.errors).map((error) => (
-                    <li key={error}>{formState.errors[error]}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-          <form role="form" action={formAction}>
-            <div className="mb-3">
-              <label>Email</label>
-              <input
-                type="email"
-                className="form-control"
-                placeholder="Input email"
-                aria-label="Email"
-                name="email"
-                id="email"
-              />
-            </div>
-            <div className="mb-3">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Input Password"
-                aria-label="Password"
-                name="password"
-                id="password"                
-              />
-            </div>
-            <div className="text-center">
-              <button
-                type="submit"
-                className="btn btn-sm btn-primary w-100 mt-4 mb-0"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-        </div>
+        <FormLogin />
 
         <div className="card-footer  pt-0 px-lg-2 px-1">
           <p className="mb-4 text-sm mx-auto">

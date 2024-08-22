@@ -12,10 +12,30 @@ import {
 import { FieldValue } from "firebase-admin/firestore";
 
 export async function signinFirebase(prevState, formData) {
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  let errors = {};
+
+  if (!isValidEmail(email)) {
+    errors.email = "Please enter a valid email address.";
+  }
+
+  if (password.trim().length <= 0) {
+    errors.password = "Password is required.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      status: false,
+      errors: errors,
+    };
+  }
+
   try {
     await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
+      email: email,
+      password: password,
       redirect: false,
     });
 
@@ -84,7 +104,7 @@ export async function signupFirebase(prevState, formData) {
 
   if (flexCheckDefault == null) {
     errors.flexCheckDefault =
-      "I agree to the terms and service and privacy policy must be selected.";
+      "terms and service and privacy policy must be selected.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -162,6 +182,8 @@ export async function doLogout() {
 
 export async function processOtp(prevState, formData) {
   const otp = formData.get("otp");
+
+  console.log("otp", otp);
 
   let errors = {};
 

@@ -10,11 +10,19 @@ const config = {
   serviceSvg: "/assets/images/svg/icon_service.svg",
   billingSvg: "/assets/images/svg/icon_billing.svg",
   ticketSvg: "/assets/images/svg/icon_ticket.svg",
-  notifPng: "/assets/images/png/icon-notif.png",
   computerSvg: "/assets/images/svg/icon_computer.svg",
   billSvg: "/assets/images/svg/icon_bill.svg",
-  avatarPng: "/assets/images/png/avatar.png",
   profileSvg: "/assets/images/svg/icon_profile.svg",
+  arrowRightSvg: "/assets/images/svg/arrow-right-white.svg",
+  dotBarSuccessSvg: "/assets/images/svg/dotbar_success.svg",
+  dotBarDarkSvg: "/assets/images/svg/dotbar_dark.svg",
+  searchSvg: "/assets/images/svg/search.svg",
+  arrowRightNormalSvg: "/assets/images/svg/icon_arrow_right.svg",
+  blueLogoSvg: "/assets/images/svg/blue-logo.svg",
+  shareSvg: "/assets/images/svg/icon_share.svg",
+  notifPng: "/assets/images/png/icon-notif.png",
+  avatarPng: "/assets/images/png/avatar.png",
+  onBoardingPng: "/assets/images/png/onboarding.png",
 };
 
 export default config;

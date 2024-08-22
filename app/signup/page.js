@@ -29,7 +29,7 @@ export default function SignupPage() {
         </div>
 
         <div className="card-body px-0">
-          {formState.status != true &&
+          {/* {formState.status != true &&
             Object.keys(formState.errors).length > 0 && (
               <div className="alert alert-warning" role="alert">
                 <h4 className="alert-heading">Warning !</h4>
@@ -39,7 +39,7 @@ export default function SignupPage() {
                   ))}
                 </ul>
               </div>
-            )}
+            )} */}
 
           <form role="form" action={formAction}>
             <div className="mb-3">
@@ -48,13 +48,23 @@ export default function SignupPage() {
                   <label>First Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={
+                      formState.errors && formState.errors?.firstName
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
                     placeholder="Input first name"
                     aria-label="First Name"
                     name="firstName"
                     id="firstName"
                   />
+                  {formState.errors && formState.errors?.firstName && (
+                    <div className="invalid-feedback">
+                      {formState.errors.firstName}
+                    </div>
+                  )}
                 </div>
+
                 <div className="col-6">
                   <label>Last Name</label>
                   <input
@@ -83,12 +93,19 @@ export default function SignupPage() {
               <label>Email</label>
               <input
                 type="email"
-                className="form-control"
+                className={
+                  formState.errors && formState.errors?.email
+                    ? "form-control is-invalid"
+                    : "form-control"
+                }
                 placeholder="Input email"
                 aria-label="Email"
                 name="email"
                 id="email"
               />
+              {formState.errors && formState.errors?.email && (
+                <div className="invalid-feedback">{formState.errors.email}</div>
+              )}
             </div>
             {/* <div className="mb-3">
               <label>Phone</label>
@@ -105,23 +122,41 @@ export default function SignupPage() {
               <label>Password</label>
               <input
                 type="password"
-                className="form-control"
+                className={
+                  formState.errors && formState.errors?.password
+                    ? "form-control is-invalid"
+                    : "form-control"
+                }
                 placeholder="Input password"
                 aria-label="Password"
                 name="password"
                 id="password"
               />
+              {formState.errors && formState.errors?.password && (
+                <div className="invalid-feedback">
+                  {formState.errors.password}
+                </div>
+              )}
             </div>
             <div className="mb-3">
               <label>Confirm Password</label>
               <input
                 type="password"
-                className="form-control"
+                className={
+                  formState.errors && formState.errors?.cPassword
+                    ? "form-control is-invalid"
+                    : "form-control"
+                }
                 placeholder="Input confirm password"
                 aria-label="Confirm Password"
                 name="cPassword"
                 id="cPassword"
               />
+              {formState.errors && formState.errors?.cPassword && (
+                <div className="invalid-feedback">
+                  {formState.errors.cPassword}
+                </div>
+              )}
             </div>
             <div className="form-check form-check-info text-start">
               <input
@@ -131,10 +166,21 @@ export default function SignupPage() {
                 id="flexCheckDefault"
                 name="flexCheckDefault"
               />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
+              <label
+                className={
+                  formState.errors && formState.errors?.flexCheckDefault
+                    ? "form-check-label is-invalid"
+                    : "form-check-label"
+                }
+              >
                 I agree the <a className="text-primary">term and service</a> and{" "}
                 <a className="text-primary">privacy policy</a>
               </label>
+              {formState.errors && formState.errors?.flexCheckDefault && (
+                <div className="invalid-feedback">
+                  {formState.errors.flexCheckDefault}
+                </div>
+              )}
             </div>
             <div className="text-center">
               <button
