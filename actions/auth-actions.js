@@ -2,14 +2,29 @@
 
 import { signIn, signOut, auth } from "@/lib/auth";
 
-import { initAdmin } from "@/lib/firebase";
+import firebase_app from "@/lib/firebase-client";
 import {
   isValidEmail,
   isValidNumber,
   isValidPassword,
 } from "@/lib/general-function";
 
-import { FieldValue } from "firebase-admin/firestore";
+import {
+  doc,
+  updateDoc,
+  serverTimestamp,
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+
+import {
+  getAuth,
+  updateProfile,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
 export async function signinFirebase(prevState, formData) {
   const email = formData.get("email");
@@ -114,50 +129,51 @@ export async function signupFirebase(prevState, formData) {
     };
   }
 
-  const firebase = await initAdmin();
-  const result = await firebase
-    .auth()
-    .createUser({
-      email: email,
-      emailVerified: false,
-      // phoneNumber: `+62${phone}`,
-      password: password,
-      displayName:
-        lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
-      disabled: false,
-    })
-    .then(async (user) => {
-      /*
-      const refUser = firebase.firestore().collection("users");
+  const auth = getAuth(firebase_app);
 
-      const param = {
-        created_at: FieldValue.serverTimestamp(),
-        email: email,
-        generateOtp: true, //supaya kirim email verifikasi
-        active: false,
-        name:
+  const result = await createUserWithEmailAndPassword(auth, email, password)
+    .then(async (result) => {
+      const user = result.user;
+
+      const res = await updateProfile(user, {
+        displayName:
           lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
-        // phone: phone,
-        // username: userName,
-      };
-      await refUser.doc(user.uid).set(param, { merge: true });
-      */
+      })
+        .then(async () => {
+          const db = getFirestore(firebase_app);
+          const userRef = doc(db, "users", user.uid);
+          await updateDoc(userRef, {
+            name:
+              lastName.trim().length > 0
+                ? `${firstName} ${lastName}`
+                : firstName,
+          });
 
-      await signIn("credentials", {
-        email: email,
-        password: password,
-        redirect: false,
-      });
+          await signIn("credentials", {
+            email: email,
+            password: password,
+            redirect: false,
+          });
 
-      return {
-        status: true,
-        errors: {},
-        message: "User successfully registered",
-      };
+          return {
+            status: true,
+            errors: {},
+            message: "User successfully registered",
+          };
+        })
+        .catch((error) => {
+          return {
+            status: false,
+            errors: {
+              email: error.message,
+            },
+          };
+        });
+
+      return res;
     })
     .catch((error) => {
-      console.log("er", error);
-      const errorCode = error.code;
+      console.log("error create user", error);
       const errorMessage = error.message;
 
       return {
@@ -169,6 +185,98 @@ export async function signupFirebase(prevState, formData) {
     });
 
   return result;
+  /*
+  const result = await createUserWithEmailAndPassword(auth, email, password);
+
+  if (result.user) {
+    updateProfile(result.user, {
+      displayName:
+        lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
+    })
+      .then(async () => {
+        await signIn("credentials", {
+          email: email,
+          password: password,
+          redirect: false,
+        });
+
+        return {
+          status: true,
+          errors: {},
+          message: "User successfully registered",
+        };
+      })
+      .catch((error) => {
+        return {
+          status: false,
+          errors: {
+            email: error.message,
+          },
+        };
+      });
+  }
+  return {
+    status: false,
+    errors: {
+      email: "Something went wrong.",
+    },
+  };
+  */
+  // const firebase = await initAdmin();
+  // const result = await firebase
+  //   .auth()
+  //   .createUser({
+  //     email: email,
+  //     emailVerified: false,
+  //     // phoneNumber: `+62${phone}`,
+  //     password: password,
+  //     displayName:
+  //       lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
+  //     disabled: false,
+  //   })
+  //   .then(async (user) => {
+  //     /*
+  //     const refUser = firebase.firestore().collection("users");
+
+  //     const param = {
+  //       created_at: FieldValue.serverTimestamp(),
+  //       email: email,
+  //       generateOtp: true, //supaya kirim email verifikasi
+  //       active: false,
+  //       name:
+  //         lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
+  //       // phone: phone,
+  //       // username: userName,
+  //     };
+  //     await refUser.doc(user.uid).set(param, { merge: true });
+  //     */
+
+  //     await signIn("credentials", {
+  //       email: email,
+  //       password: password,
+  //       redirect: false,
+  //     });
+
+  //     return {
+  //       status: true,
+  //       errors: {},
+  //       message: "User successfully registered",
+  //     };
+  //   })
+  //   .catch((error) => {
+  //     console.log("er", error);
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+
+  //     return {
+  //       status: false,
+  //       errors: {
+  //         email: errorMessage,
+  //       },
+  //     };
+  //   });
+
+  // return result;
 }
 
 export async function doSocialLogin(formData) {
@@ -182,8 +290,6 @@ export async function doLogout() {
 
 export async function processOtp(prevState, formData) {
   const otp = formData.get("otp");
-
-  console.log("otp", otp);
 
   let errors = {};
 
@@ -202,11 +308,16 @@ export async function processOtp(prevState, formData) {
 
   const email = dataAuth.user.email;
 
-  const firebase = await initAdmin();
+  // const firebase = await initAdmin();
 
-  const refUser = firebase.firestore().collection("users");
+  // const refUser = firebase.firestore().collection("users");
 
-  const docsUser = await refUser.where("email", "==", email).get();
+  // const docsUser = await refUser.where("email", "==", email).get();
+  const db = getFirestore(firebase_app);
+  const refUser = collection(db, "users");
+
+  const q = query(refUser, where("email", "==", email));
+  const docsUser = await getDocs(q);
 
   if (docsUser.docs.length <= 0) {
     return {
@@ -236,15 +347,31 @@ export async function processOtp(prevState, formData) {
     };
   }
 
-  try {
-    await refUser.doc(docUser.id).set(
-      {
-        otp: null,
-        active: true,
-        active_at: FieldValue.serverTimestamp(),
+  const endOtp = docUser.data().end_otp != null ? docUser.data().end_otp : null;
+
+  if (endOtp && endOtp.toMillis() <= Date.now()) {
+    return {
+      status: false,
+      errors: {
+        otp: "The OTP has expired. Please regenerate a new OTP.",
       },
-      { merge: true }
-    );
+    };
+  }
+
+  try {
+    // await refUser.doc(docUser.id).set(
+    //   {
+    //     otp: null,
+    //     active: true,
+    //     active_at: serverTimestamp(),
+    //   },
+    //   { merge: true }
+    // );
+    await updateDoc(doc(refUser, docUser.id), {
+      otp: null,
+      active: true,
+      active_at: serverTimestamp(),
+    });
 
     return {
       status: true,

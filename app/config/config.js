@@ -20,6 +20,8 @@ const config = {
   arrowRightNormalSvg: "/assets/images/svg/icon_arrow_right.svg",
   blueLogoSvg: "/assets/images/svg/blue-logo.svg",
   shareSvg: "/assets/images/svg/icon_share.svg",
+  otpSuccessSvg: "/assets/images/svg/otp_success.svg",
+  toDashboardSvg: "/assets/images/svg/dashboard.svg",
   notifPng: "/assets/images/png/icon-notif.png",
   avatarPng: "/assets/images/png/avatar.png",
   onBoardingPng: "/assets/images/png/onboarding.png",

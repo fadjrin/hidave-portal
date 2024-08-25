@@ -5,11 +5,43 @@ import { useFormStatus } from "react-dom";
 import { redirect } from "next/navigation";
 import { processOtp } from "@/actions/auth-actions";
 import { useState, useRef, useEffect } from "react";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import firebase_app from "@/lib/firebase-client";
+import { format, fromUnixTime } from "date-fns";
 
 export default function FormOtp({ session, config }) {
   const { pending } = useFormStatus();
+  const [countdown, setCountdown] = useState(0);
 
-  const [countdown, setCountdown] = useState(180);
+  useEffect(() => {
+    if (session.user.uid) {
+      const db = getFirestore(firebase_app);
+      const userRef = doc(db, "users", session.user.uid);
+
+      const unsubscribe = onSnapshot(userRef, async (userDoc) => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          console.log("User Data:", userData);
+
+          const currentTime = new Date().getTime();
+          const endTime = userData.end_otp.toMillis();
+          const remainingTime = Math.max(0, endTime - currentTime);
+          setCountdown(Math.floor(remainingTime / 1000));
+
+          const localEndTime = fromUnixTime(endTime / 1000);
+          console.log(format(localEndTime, "yyyy-MM-dd HH:mm:ss"));
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [session.user.uid]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,7 +57,7 @@ export default function FormOtp({ session, config }) {
   });
 
   if (formState.status) {
-    redirect("/user/home");
+    redirect("/otp/verify");
   }
 
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -69,7 +101,6 @@ export default function FormOtp({ session, config }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     joinOtpFunc();
   };
 
@@ -83,12 +114,24 @@ export default function FormOtp({ session, config }) {
     formAction(formData);
   };
 
+  const handleResendOtp = async () => {
+    const confirmResend = window.confirm(
+      "Are you sure you want to resend the OTP?"
+    );
+    if (confirmResend) {
+      const db = getFirestore(firebase_app);
+      const userRef = doc(db, "users", session.user.uid);
+      await updateDoc(userRef, { generateOtp: true });
+      console.log("OTP has been resent and generateOtp updated to true.");
+    }
+  };
+
   return (
     <>
       <form role="form" onSubmit={handleSubmit}>
         <div className="card-header text-center pt-4">
           <h2>Verify Account</h2>
-          {formState.status != true &&
+          {formState.status !== true &&
             Object.keys(formState.errors).length > 0 && (
               <div className="alert alert-warning" role="alert">
                 <h4 className="alert-heading">Warning !</h4>
@@ -119,7 +162,11 @@ export default function FormOtp({ session, config }) {
               {(countdown % 60).toString().padStart(2, "0")}
             </strong>
           </span>
-          <span className="text-primary text-sm font-weight-bold float-end">
+          <span
+            className="text-primary text-sm font-weight-bold float-end"
+            onClick={handleResendOtp}
+            style={{ cursor: "pointer" }}
+          >
             Resend OTP
           </span>
           <div className="box-otp justify-content-center text-center">

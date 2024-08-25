@@ -129,7 +129,7 @@ export default function ServiceList({ config, data }) {
                 type="button"
                 className="btn btn-sm btn-outline-primary mb-0"
               >
-                Extend
+                Re-new
               </button>
             );
             rightButton = (

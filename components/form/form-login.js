@@ -1,11 +1,12 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { redirect } from "next/navigation";
 import { signinFirebase } from "@/actions/auth-actions";
 import toast from "react-hot-toast";
 
 export default function FormLogin() {
+  const { pending } = useFormStatus();
   const [formState, formAction] = useFormState(signinFirebase, {
     status: false,
     errors: {},
@@ -76,10 +77,11 @@ export default function FormLogin() {
         </div>
         <div className="text-center">
           <button
+            disabled={pending}
             type="submit"
             className="btn btn-sm btn-primary w-100 mt-4 mb-0"
           >
-            Sign in
+            {pending ? "Submitting..." : "Sign in"}
           </button>
         </div>
       </form>

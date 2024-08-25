@@ -16,7 +16,7 @@ export const DUMMY_SERVICE = [
     service_plan: "pro plan",
     until: "30/12/2024",
     content: "Cloud 03 - L 10 users",
-    preparing_percentage: 90,
+    preparing_percentage: 50,
     status: "preparing_process",
   },
   {
@@ -79,4 +79,14 @@ export const DUMMY_SERVICE = [
     preparing_percentage: "",
     status: "active",
   },  
+  {
+    id: "s9",
+    name: "Dave Service 10111",
+    text: "stopped",
+    service_plan: "pro plan",
+    until: "30/12/2024",
+    content: "Cloud 03 - L 10 users",
+    preparing_percentage: "",
+    status: "stopped",
+  },    
 ];
