@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import AuthTemplate from "@/components/auth-template";
-import config from "../config/config";
+import config from "../../config/config";
 import { signupFirebase } from "@/actions/auth-actions";
 import { redirect } from "next/navigation";
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import AuthTemplate from "@/components/auth-template";
-import config from "./config/config";
+import config from "../config/config";
 import ButtonGoogle from "@/components/button/button-google";
 import FormLogin from "@/components/form/form-login";
 import { auth } from "@/lib/auth";

@@ -1,4 +1,3 @@
-
 import ButtonLogout from "@/components/button/button-logout";
 import config from "../config/config";
 import LinkNav from "@/components/link-nav";
@@ -18,7 +17,17 @@ export default async function AuthRootLayout({ children, title, addButton }) {
   if (!session) return <div>Not authenticated</div>;
 
   return (
-    <>
+    <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css?family=Space+Grotesk:300,400,600,700"
+          rel="stylesheet"
+        />
+      </head>
       <body className="g-sidenav-show bg-gray-300">
         <aside
           className="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
@@ -264,6 +273,6 @@ export default async function AuthRootLayout({ children, title, addButton }) {
           </div>
         </main>
       </body>
-    </>
+    </html>
   );
 }

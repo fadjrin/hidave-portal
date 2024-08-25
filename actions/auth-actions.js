@@ -18,6 +18,7 @@ import {
   query,
   where,
   getDocs,
+  setDoc,
 } from "firebase/firestore";
 
 import {
@@ -75,9 +76,7 @@ export async function signinFirebase(prevState, formData) {
 export async function signupFirebase(prevState, formData) {
   const firstName = formData.get("firstName");
   const lastName = formData.get("lastName");
-  // const userName = formData.get("userName");
   const email = formData.get("email");
-  // const phone = formData.get("phone");
   const password = formData.get("password");
   const cPassword = formData.get("cPassword");
   const flexCheckDefault = formData.get("flexCheckDefault");
@@ -105,18 +104,6 @@ export async function signupFirebase(prevState, formData) {
     errors.firstName = "First name is required.";
   }
 
-  // if (userName.trim().length <= 0) {
-  //   errors.userName = "User name is required.";
-  // }
-
-  // if (phone.trim().length <= 0) {
-  //   errors.phone = "Phone is required.";
-  // } else {
-  //   if (!isValidNumber(phone.trim())) {
-  //     errors.phone = "Phone must be digits.";
-  //   }
-  // }
-
   if (flexCheckDefault == null) {
     errors.flexCheckDefault =
       "terms and service and privacy policy must be selected.";
@@ -135,42 +122,17 @@ export async function signupFirebase(prevState, formData) {
     .then(async (result) => {
       const user = result.user;
 
-      const res = await updateProfile(user, {
+      await updateProfile(user, {
         displayName:
           lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
-      })
-        .then(async () => {
-          const db = getFirestore(firebase_app);
-          const userRef = doc(db, "users", user.uid);
-          await updateDoc(userRef, {
-            name:
-              lastName.trim().length > 0
-                ? `${firstName} ${lastName}`
-                : firstName,
-          });
+      });
 
-          await signIn("credentials", {
-            email: email,
-            password: password,
-            redirect: false,
-          });
-
-          return {
-            status: true,
-            errors: {},
-            message: "User successfully registered",
-          };
-        })
-        .catch((error) => {
-          return {
-            status: false,
-            errors: {
-              email: error.message,
-            },
-          };
-        });
-
-      return res;
+      return {
+        status: true,
+        errors: {},
+        message: "User successfully registered",
+        uid: user.uid,
+      };
     })
     .catch((error) => {
       console.log("error create user", error);
@@ -184,99 +146,27 @@ export async function signupFirebase(prevState, formData) {
       };
     });
 
-  return result;
-  /*
-  const result = await createUserWithEmailAndPassword(auth, email, password);
+  if (result.status) {
+    const db = getFirestore(firebase_app);
+    const userRef = doc(db, "users", result.uid);
 
-  if (result.user) {
-    updateProfile(result.user, {
-      displayName:
-        lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
-    })
-      .then(async () => {
-        await signIn("credentials", {
-          email: email,
-          password: password,
-          redirect: false,
-        });
+    await setDoc(
+      userRef,
+      {
+        name:
+          lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
+      },
+      { merge: true }
+    );
 
-        return {
-          status: true,
-          errors: {},
-          message: "User successfully registered",
-        };
-      })
-      .catch((error) => {
-        return {
-          status: false,
-          errors: {
-            email: error.message,
-          },
-        };
-      });
+    await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
+    });
   }
-  return {
-    status: false,
-    errors: {
-      email: "Something went wrong.",
-    },
-  };
-  */
-  // const firebase = await initAdmin();
-  // const result = await firebase
-  //   .auth()
-  //   .createUser({
-  //     email: email,
-  //     emailVerified: false,
-  //     // phoneNumber: `+62${phone}`,
-  //     password: password,
-  //     displayName:
-  //       lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
-  //     disabled: false,
-  //   })
-  //   .then(async (user) => {
-  //     /*
-  //     const refUser = firebase.firestore().collection("users");
 
-  //     const param = {
-  //       created_at: FieldValue.serverTimestamp(),
-  //       email: email,
-  //       generateOtp: true, //supaya kirim email verifikasi
-  //       active: false,
-  //       name:
-  //         lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
-  //       // phone: phone,
-  //       // username: userName,
-  //     };
-  //     await refUser.doc(user.uid).set(param, { merge: true });
-  //     */
-
-  //     await signIn("credentials", {
-  //       email: email,
-  //       password: password,
-  //       redirect: false,
-  //     });
-
-  //     return {
-  //       status: true,
-  //       errors: {},
-  //       message: "User successfully registered",
-  //     };
-  //   })
-  //   .catch((error) => {
-  //     console.log("er", error);
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-
-  //     return {
-  //       status: false,
-  //       errors: {
-  //         email: errorMessage,
-  //       },
-  //     };
-  //   });
-
-  // return result;
+  return result;
 }
 
 export async function doSocialLogin(formData) {

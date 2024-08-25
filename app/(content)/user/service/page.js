@@ -1,5 +1,4 @@
 import config from "@/app/config/config";
-import AuthRootLayout from "../auth-root-layout";
 import NullDataPage from "@/components/service-page/null-data";
 import ServiceList from "@/components/service-page/service-list";
 import { DUMMY_SERVICE } from "@/dummy/service";
@@ -59,10 +58,8 @@ export default function ServicePage() {
   }
 
   return (
-    <AuthRootLayout title="Service" addButton={addButton}>
-      <div className="container-fluid py-2">
-        <div className="row">{content}</div>
-      </div>
-    </AuthRootLayout>
+    <div className="container-fluid py-2">
+      <div className="row">{content}</div>
+    </div>
   );
 }

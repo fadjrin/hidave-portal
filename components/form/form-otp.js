@@ -30,7 +30,8 @@ export default function FormOtp({ session, config }) {
           console.log("User Data:", userData);
 
           const currentTime = new Date().getTime();
-          const endTime = userData.end_otp.toMillis();
+          const endTime =
+            userData.end_otp != null ? userData.end_otp.toMillis() : null;
           const remainingTime = Math.max(0, endTime - currentTime);
           setCountdown(Math.floor(remainingTime / 1000));
 
