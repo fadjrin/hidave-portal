@@ -33,7 +33,7 @@ import { isValidEmail, isValidPassword } from "@/lib/general-function";
 
 export async function createSession(user, reRoute = false) {
   cookies().set(SESSION_COOKIE_NAME, JSON.stringify(user), {
-    // httpOnly: true,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24,
     path: "/",
