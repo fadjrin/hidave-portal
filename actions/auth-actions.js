@@ -1,14 +1,5 @@
 "use server";
 
-import { signIn, signOut, auth } from "@/lib/auth";
-
-import firebase_app from "@/lib/firebase-client";
-import {
-  isValidEmail,
-  isValidNumber,
-  isValidPassword,
-} from "@/lib/general-function";
-
 import {
   doc,
   updateDoc,
@@ -18,14 +9,48 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
   setDoc,
 } from "firebase/firestore";
 
 import {
-  getAuth,
   updateProfile,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
+
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+import {
+  HOME_ROUTE,
+  ROOT_ROUTE,
+  SESSION_COOKIE_NAME,
+} from "@/app/config/constants";
+
+import { firebase_app, auth } from "@/lib/firebase-client";
+import { isValidEmail, isValidPassword } from "@/lib/general-function";
+
+export async function createSession(user, reRoute = false) {
+  cookies().set(SESSION_COOKIE_NAME, JSON.stringify(user), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24,
+    path: "/",
+  });
+
+  if (reRoute) {
+    //kasih delay dulu biar dipastikan masuk dlu
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    redirect(HOME_ROUTE);
+  }
+}
+
+export async function removeSession() {
+  cookies().delete(SESSION_COOKIE_NAME);
+
+  redirect(ROOT_ROUTE);
+}
 
 export async function signinFirebase(prevState, formData) {
   const email = formData.get("email");
@@ -49,10 +74,28 @@ export async function signinFirebase(prevState, formData) {
   }
 
   try {
-    await signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
+    const authEmail = await signInWithEmailAndPassword(auth, email, password);
+
+    const db = getFirestore(firebase_app);
+    const refUser = doc(db, "users", authEmail.user.uid);
+    const docUser = await getDoc(refUser);
+
+    if (!docUser.exists()) {
+      return {
+        status: false,
+        errors: {
+          email: "Login failed.",
+        },
+      };
+    }
+
+    await createSession({
+      uid: authEmail.user.uid,
+      displayName: authEmail.user.displayName,
+      email: authEmail.user.email,
+      emailVerified: authEmail.user.emailVerified,
+      photoURL: docUser.data().photoURL,
+      initUser: docUser.data().active != null ? !docUser.data().active : true,
     });
 
     return {
@@ -61,6 +104,7 @@ export async function signinFirebase(prevState, formData) {
       message: "User successfully logged in.",
     };
   } catch (error) {
+    console.log("er", error);
     const errorCode = error.code;
     const errorMessage = error.message;
 
@@ -116,8 +160,6 @@ export async function signupFirebase(prevState, formData) {
     };
   }
 
-  const auth = getAuth(firebase_app);
-
   const result = await createUserWithEmailAndPassword(auth, email, password)
     .then(async (result) => {
       const user = result.user;
@@ -159,23 +201,20 @@ export async function signupFirebase(prevState, formData) {
       { merge: true }
     );
 
-    await signIn("credentials", {
+    const authEmail = await signInWithEmailAndPassword(auth, email, password);
+
+    await createSession({
+      uid: result.uid,
+      displayName:
+        lastName.trim().length > 0 ? `${firstName} ${lastName}` : firstName,
       email: email,
-      password: password,
-      redirect: false,
+      emailVerified: authEmail.user.emailVerified,
+      photoURL: "",
+      initUser: true,
     });
   }
 
   return result;
-}
-
-export async function doSocialLogin(formData) {
-  const action = formData.get("action");
-  await signIn(action, { redirectTo: "/user/home" });
-}
-
-export async function doLogout() {
-  await signOut({ redirectTo: "/" });
 }
 
 export async function processOtp(prevState, formData) {
@@ -194,22 +233,15 @@ export async function processOtp(prevState, formData) {
     };
   }
 
-  const dataAuth = await auth();
+  const sessionArray = cookies().get(SESSION_COOKIE_NAME)?.value || null;
 
-  const email = dataAuth.user.email;
+  const session = JSON.parse(sessionArray);
 
-  // const firebase = await initAdmin();
-
-  // const refUser = firebase.firestore().collection("users");
-
-  // const docsUser = await refUser.where("email", "==", email).get();
   const db = getFirestore(firebase_app);
-  const refUser = collection(db, "users");
+  const refUser = doc(db, "users", session.uid);
+  const docUser = await getDoc(refUser);
 
-  const q = query(refUser, where("email", "==", email));
-  const docsUser = await getDocs(q);
-
-  if (docsUser.docs.length <= 0) {
+  if (!docUser.exists()) {
     return {
       status: false,
       errors: {
@@ -218,11 +250,18 @@ export async function processOtp(prevState, formData) {
     };
   }
 
-  const docUser = docsUser.docs[0];
-
   const active = docUser.data().active != null ? docUser.data().active : false;
 
   if (active) {
+    await createSession({
+      uid: session.uid,
+      displayName: session.displayName,
+      email: session.email,
+      emailVerified: session.emailVerified,
+      photoURL: session.photoURL,
+      initUser: false,
+    });
+
     return {
       status: true,
     };
@@ -249,18 +288,19 @@ export async function processOtp(prevState, formData) {
   }
 
   try {
-    // await refUser.doc(docUser.id).set(
-    //   {
-    //     otp: null,
-    //     active: true,
-    //     active_at: serverTimestamp(),
-    //   },
-    //   { merge: true }
-    // );
-    await updateDoc(doc(refUser, docUser.id), {
+    await updateDoc(refUser, {
       otp: null,
       active: true,
       active_at: serverTimestamp(),
+    });
+
+    await createSession({
+      uid: session.uid,
+      displayName: session.displayName,
+      email: session.email,
+      emailVerified: session.emailVerified,
+      photoURL: session.photoURL,
+      initUser: false,
     });
 
     return {

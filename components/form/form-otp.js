@@ -12,7 +12,7 @@ import {
   updateDoc,
   onSnapshot,
 } from "firebase/firestore";
-import firebase_app from "@/lib/firebase-client";
+import {firebase_app} from "@/lib/firebase-client";
 import { format, fromUnixTime } from "date-fns";
 
 export default function FormOtp({ session, config }) {

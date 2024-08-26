@@ -1,8 +1,8 @@
 import config from "@/app/config/config";
+import { SESSION_COOKIE_NAME } from "@/app/config/constants";
 import FormOtp from "@/components/form/form-otp";
 import OtpTemplate from "@/components/otp-pages/otp-template";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Verify Account",
@@ -10,7 +10,11 @@ export const metadata = {
 };
 
 export default async function OtpPage() {
-  const session = await auth();
+  const sessionArray = cookies().get(SESSION_COOKIE_NAME)?.value || null;
+
+  const session = {
+    user: JSON.parse(sessionArray),
+  };
 
   return (
     <OtpTemplate config={config}>

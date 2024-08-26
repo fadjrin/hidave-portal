@@ -1,10 +1,14 @@
-import ButtonLogout from "@/components/button/button-logout";
+
 import config from "../config/config";
 import LinkNav from "@/components/link-nav";
-import { auth } from "@/lib/auth";
 import Link from "next/link";
 import "../globals.css";
 import "../custom.css";
+import { cookies } from "next/headers";
+import { SESSION_COOKIE_NAME } from "../config/constants";
+
+import { redirect } from "next/navigation";
+import AuthProfile from "@/components/auth-profile";
 
 export const metadata = {
   title: "Hi Dave",
@@ -12,9 +16,11 @@ export const metadata = {
 };
 
 export default async function AuthRootLayout({ children, title, addButton }) {
-  const session = await auth();
+  const session = cookies().get(SESSION_COOKIE_NAME)?.value || null;
 
-  if (!session) return <div>Not authenticated</div>;
+  // if (!session) {
+  //   redirect("/");
+  // }
 
   return (
     <html lang="en">
@@ -222,46 +228,7 @@ export default async function AuthRootLayout({ children, title, addButton }) {
                     </div>
                   </li>
                   <li className="nav-item ps-md-3 pn-0 d-flex align-items-center">
-                    <div className="dropdown custom-dropdown-profile">
-                      Hi, {session?.user?.name}
-                      <ButtonLogout>
-                        <img
-                          className="h-100 ms-md-1"
-                          alt="avatar"
-                          src={
-                            session?.user?.image != ""
-                              ? session?.user?.image
-                              : config.avatarPng
-                          }
-                          width="28"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        />
-                      </ButtonLogout>
-                      <div
-                        className="dropdown-menu p-0"
-                        aria-labelledby="dropdownMenuButtonProfile"
-                      >
-                        <ul className="custom-notifications">
-                          <li>
-                            <a className="d-block">
-                              <img className="me-1" src={config.profileSvg} />
-                              <span className="text-sm text-dark mb-0">
-                                Profile{" "}
-                              </span>
-                            </a>
-                          </li>
-                        </ul>
-                        <div className="text-center py-2">
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-danger w-75 mb-0 mx-3"
-                          >
-                            Logout
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <AuthProfile session={session} config={config} />
                   </li>
                 </ul>
               </div>
