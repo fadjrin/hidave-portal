@@ -2,7 +2,6 @@
 
 import { createSession } from "@/actions/auth-actions";
 import { signInWithGoogle } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 export default function ButtonGoogle({ config }) {
   const handleSignIn = async () => {
@@ -16,8 +15,7 @@ export default function ButtonGoogle({ config }) {
           emailVerified: user.emailVerified,
           photoURL: user.photoURL,
           initUser: false,
-        },
-        true
+        }
       );
     }
   };
