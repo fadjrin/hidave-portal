@@ -4,8 +4,16 @@ import AuthTemplate from "@/components/auth-template";
 import config from "../config/config";
 import ButtonGoogle from "@/components/button/button-google";
 import FormLogin from "@/components/form/form-login";
+import { cookies } from "next/headers";
+import { HOME_ROUTE, SESSION_COOKIE_NAME } from "../config/constants";
+import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
+  const session = cookies().get(SESSION_COOKIE_NAME)?.value || null;
+
+  if (session) {
+    redirect(HOME_ROUTE);
+  }
 
   return (
     <AuthTemplate config={config}>

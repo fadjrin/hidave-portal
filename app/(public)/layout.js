@@ -3,7 +3,7 @@ import "../globals.css";
 import "../custom.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
-// import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +26,7 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className={inter.className}>
-        {/* <Toaster position="top-center" /> */}
+        <Toaster position="top-center" />
         {children}
       </body>
     </html>
