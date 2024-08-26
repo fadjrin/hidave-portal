@@ -33,15 +33,13 @@ import { isValidEmail, isValidPassword } from "@/lib/general-function";
 
 export async function createSession(user, reRoute = false) {
   cookies().set(SESSION_COOKIE_NAME, JSON.stringify(user), {
-    httpOnly: true,
+    // httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24,
     path: "/",
   });
 
   if (reRoute) {
-    //kasih delay dulu biar dipastikan masuk dlu
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     redirect(HOME_ROUTE);
   }
 }
@@ -178,7 +176,11 @@ export async function signupFirebase(prevState, formData) {
     })
     .catch((error) => {
       console.log("error create user", error);
-      const errorMessage = error.message;
+      let errorMessage = error.message;
+
+      if (error.code == "auth/email-already-in-use") {
+        errorMessage = "The user already exists.";
+      }
 
       return {
         status: false,
